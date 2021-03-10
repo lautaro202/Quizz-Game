@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import Typography  from '@material-ui/core/Typography'
 import {useState} from 'react'
-import Card from '@material-ui/core/Card'
+import AppBar from '@material-ui/core/AppBar'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -53,43 +53,56 @@ function App() {
   }
   const classes = useStyles()
   const [question, setQuestion] = useState(0)
-  const [score, setScore] = useState(0)
-  const [correct, setCorrect] = useState(false)
+  const [defeat, setDefeat] = useState(true)
   const Preguntas = trivia.questions[question].text
-  const Trivia = trivia.questions[question].options[question]
   const Image = trivia.questions[question].image
   const Answers = trivia.questions[question].options
   const strings = JSON.stringify(Preguntas).replace(/['"]+/g, '')
-  const handleNext = (isCorrect) => {
+  const [score, setScore] = useState(0)
 
+
+  const HandleNext = (isCorrect) => {
     if(isCorrect === true) {
       setScore(score + 1)
     }
-
-    console.log(score)
     const nextQuestion = question + 1
     if (nextQuestion < trivia.questions.length) {
       setQuestion(nextQuestion)
-
+      
     }
+ 
+    else if (score < 1 ) {
+      setDefeat(true)
+
+    }  
+    
+    else if (score === 2 ) {
+      setDefeat(false)
+    } 
     else {
       alert('no hay mas preguntas')
     }
   }
 
 
+
+
   return (
     <div className="App">
       <div className='App-header'>
       <Container >
-        {score == 2 ? <div>ganaste</div> : null}
-        {score <= 2 && question == 1 ? <div>perdiste</div> : null}
+        <AppBar>
+          Se gana contestando bien 1 de 2 preguntas
+        </AppBar>
+        <Typography>
+          <div>respondiste bien {score} de 2 preguntas </div> 
+          <img style={{maxHeight:100, maxWidth:100}}src={trivia.image}/>
 
+        </Typography>
         {!start ? <Typography className={classes.title}>
          {trivia.title}
         </Typography> : null}
-
-        {start ? 
+        {start && score < 2  ?
           <Typography>{strings}:
           <p>
             <img className={classes.image} src={Image}/>
@@ -97,19 +110,21 @@ function App() {
           <p>{Answers.map((options) => {
             return (
               <div>
-                <Button className={classes.button} onClick={() => handleNext(options.correct)}>
+                <Button className={classes.button} onClick={() => HandleNext(options.correct)}>
                 {options.text}
               </Button>
 
               </div>
             )
           })}</p>
-              <Button onClick={handleNext} >
+              <Button onClick={HandleNext} >
                 Siguiente
               </Button>
           </Typography>
-        : null}
-        {/* <img src={trivia.image}/> */}
+          
+        :  question <= 1 ? console.log('anda por fabor') :  console.log('anda por fabor') } 
+        {console.log(question)}
+        {score === 2 ?  <div>Felicidades ganaste!</div> : null}
         {!start ? <Button onClick={handleClick} >
           Comenzar
         </Button> : null}
