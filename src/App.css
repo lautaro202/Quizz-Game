@@ -1,3 +1,7 @@
+@keyframes bg-animation {
+  0% {background-position: right;}
+  100% {background-position: left;}
+}
 .App {
   text-align: center;
 }
@@ -14,6 +18,10 @@
 }
 
 .App-header {
+  background-image: linear-gradient(90deg, #845ec2, #d65db1, #ff9671, #ffc75f, #f9f781);
+  animation: bg-animations 30s infinite alternate;
+  background-size: 300%;
+  background-position: left;
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
